@@ -3,10 +3,10 @@
 A world-class, full-stack luxury real estate website with a public site, a property listing system, and a secure admin dashboard.
 
 - **Frontend:** React (Vite) · Tailwind CSS · Framer Motion · React Router
-- **Backend:** Python · FastAPI · SQLAlchemy · PostgreSQL
+- **Backend:** Python · FastAPI · SQLAlchemy · SQLite (default) or PostgreSQL
 - **Image storage:** Cloudinary
 - **Email:** SMTP contact-form notifications (fastapi-mail)
-- **Deployment:** Docker · docker-compose · Nginx
+- **Deployment:** Vercel (frontend) + Render (backend) free tiers — see [DEPLOYMENT.md](DEPLOYMENT.md). Docker · docker-compose · Nginx provided as an optional alternative.
 
 Theme: Navy Blue `#0B1E3F` · Gold `#C8A96A` · White · Light Grey.
 
@@ -95,11 +95,10 @@ The backend automatically creates tables and seeds an admin user + demo content 
 cd backend
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env          # then edit values
+cp .env.example .env          # defaults to SQLite — no DB server needed
 
-# Ensure PostgreSQL is running and DATABASE_URL is correct
-python seed.py                # creates admin + demo data
-uvicorn app.main:app --reload
+python seed.py                # optional: adds demo properties/blog/testimonials
+uvicorn app.main:app --reload # admin user + settings are auto-created on startup
 ```
 
 API runs at http://localhost:8000.

@@ -1,0 +1,63 @@
+# Render Blueprint for the Wallmark Realtors FastAPI backend.
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Deploy: push this repo to GitHub, then in Render choose "New +" -> "Blueprint"
+# and point it at the repo. Render reads this file and provisions the service.
+services:
+  - type: web
+    name: wallmark-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: ENVIRONMENT
+        value: production
+      # SQLite on the free tier (ephemeral — see DEPLOYMENT.md).
+      - key: DATABASE_URL
+        value: sqlite:///./wallmark.db
+      # Generate a strong value (Render can auto-generate one for you).
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "1440"
+      # ---- Set these in the Render dashboard after the first deploy ----
+      - key: FRONTEND_URL
+        sync: false
+      - key: SITE_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: CORS_ORIGIN_REGEX
+        value: https://.*\.vercel\.app
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_NAME
+        value: Wallmark Admin
+      # ---- Image uploads (Cloudinary) ----
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      # ---- Email notifications (optional) ----
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_FROM
+        value: wallmarkrealtors@gmail.com
+      - key: MAIL_TO
+        value: wallmarkrealtors@gmail.com
+      - key: MAIL_SERVER
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: "587"

@@ -17,7 +17,10 @@ class Settings(BaseSettings):
     SITE_URL: str = "https://www.wallmarkrealtors.com"
 
     # Database
-    DATABASE_URL: str = "postgresql://wallmark:wallmark@localhost:5432/wallmark"
+    # Defaults to a zero-setup SQLite file so the app runs anywhere (local, Render
+    # free tier) without a database server. Override with a Postgres URL for a
+    # managed/persistent database.
+    DATABASE_URL: str = "sqlite:///./wallmark.db"
 
     # Security / JWT
     SECRET_KEY: str = "change-me-in-production-use-a-long-random-string"
@@ -30,7 +33,11 @@ class Settings(BaseSettings):
     ADMIN_NAME: str = "Wallmark Admin"
 
     # CORS
+    # Comma-separated list of exact allowed origins (e.g. your Vercel production URL).
     CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000"
+    # Optional regex to allow dynamic origins, e.g. Vercel preview deployments:
+    #   CORS_ORIGIN_REGEX=https://.*\.vercel\.app
+    CORS_ORIGIN_REGEX: str = ""
 
     # Cloudinary
     CLOUDINARY_CLOUD_NAME: str = ""
@@ -55,7 +62,15 @@ class Settings(BaseSettings):
 
     @property
     def cors_origins_list(self) -> List[str]:
-        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        origins = [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        # Always trust the configured frontend URL.
+        if self.FRONTEND_URL and self.FRONTEND_URL not in origins:
+            origins.append(self.FRONTEND_URL.strip())
+        return origins
+
+    @property
+    def cors_origin_regex(self):
+        return self.CORS_ORIGIN_REGEX.strip() or None
 
 
 @lru_cache

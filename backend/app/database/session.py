@@ -1,12 +1,23 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 from app.config import settings
 
-# SQLite (used for zero-setup local dev) needs check_same_thread disabled so it
-# can be shared across FastAPI's threadpool. Other databases ignore this.
+# SQLite (used for zero-setup local dev and free-tier hosting) needs
+# check_same_thread disabled so it can be shared across FastAPI's threadpool.
+# Other databases ignore this.
 _is_sqlite = settings.DATABASE_URL.startswith("sqlite")
 _connect_args = {"check_same_thread": False} if _is_sqlite else {}
+
+# Ensure the directory holding the SQLite file exists (e.g. when pointing the
+# DB at a mounted disk path like sqlite:////var/data/wallmark.db).
+if _is_sqlite:
+    _db_path = settings.DATABASE_URL.split("sqlite:///", 1)[-1]
+    _db_dir = os.path.dirname(_db_path)
+    if _db_dir:
+        os.makedirs(_db_dir, exist_ok=True)
 
 engine = create_engine(
     settings.DATABASE_URL,

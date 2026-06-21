@@ -37,4 +37,13 @@ DEFAULT_SETTINGS = {
         "Leasing & rental support"
     ),
     "about_image": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=80",
+    # --- Homepage stats (editable) ---
+    "stat1_value": "1,500+",
+    "stat1_label": "Happy Families",
+    "stat2_value": "850+",
+    "stat2_label": "Properties Sold",
+    "stat3_value": "18 Yrs",
+    "stat3_label": "Of Excellence",
+    "stat4_value": "4,200 Cr",
+    "stat4_label": "Worth Transacted",
 }

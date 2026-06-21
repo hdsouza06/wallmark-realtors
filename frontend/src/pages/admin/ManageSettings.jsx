@@ -103,6 +103,28 @@ export default function ManageSettings() {
           ))}
         </Card>
 
+        {/* Homepage stats */}
+        <Card className="space-y-4 lg:col-span-2">
+          <h2 className="text-lg font-semibold text-navy-900">Homepage Stats</h2>
+          <p className="text-sm text-gray-500">
+            The four highlight numbers on the home page. The number counts up automatically — keep a
+            number at the start (e.g. <span className="font-medium">1,500+</span>,{" "}
+            <span className="font-medium">18 Yrs</span>, <span className="font-medium">4,200 Cr</span>).
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="grid grid-cols-2 gap-3 rounded-xl border border-gray-100 p-3">
+                <Field label={`Stat ${i} — value`}>
+                  <input value={form[`stat${i}_value`] || ""} onChange={set(`stat${i}_value`)} className="input-luxe" placeholder="1,500+" />
+                </Field>
+                <Field label={`Stat ${i} — label`}>
+                  <input value={form[`stat${i}_label`] || ""} onChange={set(`stat${i}_label`)} className="input-luxe" placeholder="Happy Families" />
+                </Field>
+              </div>
+            ))}
+          </div>
+        </Card>
+
         {/* About */}
         <Card className="space-y-4 lg:col-span-2">
           <h2 className="text-lg font-semibold text-navy-900">About Us Section (Home page)</h2>

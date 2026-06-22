@@ -78,21 +78,23 @@ export default function PropertyDetail() {
         </div>
 
         {/* Gallery */}
-        <div className="container-luxe mt-6 grid gap-4 lg:grid-cols-[2fr_1fr]">
+        <div className="container-luxe mt-6">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="overflow-hidden rounded-3xl">
-            <img src={images[active].url} alt={property.title} className="h-[300px] w-full object-cover sm:h-[480px]" />
+            <img src={images[active].url} alt={property.title} className="h-[300px] w-full object-cover sm:h-[520px]" />
           </motion.div>
-          <div className="grid grid-cols-4 gap-3 lg:grid-cols-2">
-            {images.slice(0, 4).map((img, i) => (
-              <button
-                key={img.id || i}
-                onClick={() => setActive(i)}
-                className={`overflow-hidden rounded-2xl border-2 transition ${active === i ? "border-gold" : "border-transparent"}`}
-              >
-                <img src={img.url} alt="" className="h-20 w-full object-cover lg:h-[114px]" />
-              </button>
-            ))}
-          </div>
+          {images.length > 1 && (
+            <div className="mt-3 flex gap-3 overflow-x-auto pb-1">
+              {images.map((img, i) => (
+                <button
+                  key={img.id || i}
+                  onClick={() => setActive(i)}
+                  className={`shrink-0 overflow-hidden rounded-2xl border-2 transition ${active === i ? "border-gold" : "border-transparent hover:border-gold/40"}`}
+                >
+                  <img src={img.url} alt="" className="h-20 w-28 object-cover sm:h-24 sm:w-36" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Body */}

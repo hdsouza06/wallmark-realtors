@@ -55,8 +55,9 @@ def _ensure_settings():
 
 
 def _ensure_admin_user():
-    """Guarantee the configured admin account exists so login always works."""
-    from app.auth.security import get_password_hash
+    """Guarantee the configured admin account exists and its password matches the
+    ADMIN_PASSWORD env var, so the owner can always recover access by setting it."""
+    from app.auth.security import get_password_hash, verify_password
     from app.database.session import SessionLocal
     from app.models.user import User
 
@@ -74,6 +75,12 @@ def _ensure_admin_user():
             )
             db.commit()
             logging.info("Bootstrapped admin user: %s", settings.ADMIN_EMAIL)
+        elif not verify_password(settings.ADMIN_PASSWORD, existing.hashed_password):
+            # Keep the admin credentials in sync with the configured env var.
+            existing.hashed_password = get_password_hash(settings.ADMIN_PASSWORD)
+            existing.is_admin = True
+            db.commit()
+            logging.info("Synced admin password for: %s", settings.ADMIN_EMAIL)
     finally:
         db.close()
 

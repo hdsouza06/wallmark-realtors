@@ -69,11 +69,12 @@ export default function PropertyEditor() {
     setSaving(true);
     setError("");
     try {
-      let saved;
-      if (isEdit) {
-        saved = await propertiesApi.update(propId, buildPayload());
+      // If the property was already created (e.g. during image upload), update
+      // it instead of creating a second duplicate record.
+      if (isEdit || propId) {
+        await propertiesApi.update(propId, buildPayload());
       } else {
-        saved = await propertiesApi.create(buildPayload());
+        const saved = await propertiesApi.create(buildPayload());
         setPropId(saved.id);
       }
       navigate("/admin/properties");

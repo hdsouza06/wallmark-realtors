@@ -25,6 +25,7 @@ export const NAV_LINKS = [
   { label: "Home Loan", to: "/home-loan" },
   { label: "Interiors", to: "/interiors" },
   { label: "Redevelopment", to: "/redevelopment" },
+  { label: "About Us", to: "/about" },
   { label: "Contact", to: "/contact" },
 ];
 
